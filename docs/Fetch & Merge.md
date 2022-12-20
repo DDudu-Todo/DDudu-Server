@@ -24,7 +24,8 @@ $ git fetch upstream
 
 ##### 3) merge
 
-- upstream/master에는 최신 commit 내역이 반영되어 있다. 이 반영사항을 내 local 저장소에 반영하려면 merge를 통해 현재 내 main 브랜치에 병합 
+- upstream/master에는 최신 commit 내역이 반영되어 있다. 
+- 이 반영사항을 내 local 저장소에 반영하려면 merge를 통해 현재 내 main 브랜치에 병합 
 
 ```
 $ git merge upstream/main
