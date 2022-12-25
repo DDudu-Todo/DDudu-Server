@@ -29,6 +29,8 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	// for Swagger API docs
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
+	// for spring-boot-devtools
+	developmentOnly('org.springframework.boot:spring-boot-devtools')
 }
 
 tasks.named('test') {

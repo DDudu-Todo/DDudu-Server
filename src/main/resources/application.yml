@@ -1,0 +1,16 @@
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  # Live Reload 기능 활성화
+  devtools:
+    livereload:
+      enabled: true
+  # Thymeleaf cache 사용 중지
+  thymeleaf:
+    cache: false
+  # 메시지 인코딩 utf-8
+  messages:
+    basename: messages, ValidationMessages, PropertyNames
+    cache-duration: -1
+    encoding: utf-8
