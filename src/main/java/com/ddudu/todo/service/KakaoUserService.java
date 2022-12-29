@@ -8,6 +8,7 @@ import com.ddudu.todo.model.oauth.OauthToken;
 import com.ddudu.todo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -23,6 +24,12 @@ import java.sql.Timestamp;
 @Service
 public class KakaoUserService {
 
+    @Value("#{kakaoResource['rest_api_key']}")
+    String client_id;
+
+    @Value("#{kakaoResource['redirect_uri']}")
+    String redirect_uri;
+
     @Autowired
     private final UserRepository userRepository;
 
@@ -36,8 +43,8 @@ public class KakaoUserService {
 
         MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
-        params.add("client_id", "1540268f26cf9428dc8d5e06a18aa583");
-        params.add("redirect_url", "http://localhost:3000/user/kakao/oauth");
+        params.add("client_id", client_id);
+        params.add("redirect_url", redirect_uri);
         params.add("code", code);
 
         HttpEntity<MultiValueMap<String, Object>> kakaoTokenRequest = new HttpEntity<>(params, headers);
