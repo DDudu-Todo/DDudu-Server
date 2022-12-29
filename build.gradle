@@ -29,6 +29,19 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	// for Swagger API docs
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
+
+	// spring security
+//	implementation 'org.springframework.boot:spring-boot-starter-security'
+	// OAuth2
+//	implementation group: 'org.springframework.security.oauth', name: 'spring-security-oauth2'
+
+	// mysql
+	implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client'
+
+	// https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
+	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+
+
 }
 
 tasks.named('test') {
