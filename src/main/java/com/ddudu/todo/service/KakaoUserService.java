@@ -6,6 +6,9 @@ import com.ddudu.todo.model.KakaoProfile;
 import com.ddudu.todo.model.User;
 import com.ddudu.todo.model.oauth.OauthToken;
 import com.ddudu.todo.repository.UserRepository;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +21,11 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
@@ -29,6 +36,12 @@ public class KakaoUserService {
 
     @Value("#{kakaoResource['redirect_uri']}")
     String redirect_uri;
+
+    @Value("#{jwtResource['EXPIRATION_TIME']}")
+    int JWT_EXPIRATION_TIME;
+
+    @Value("#{jwtResource['SECRET']}")
+    String JWT_SECRET;
 
     @Autowired
     private final UserRepository userRepository;
@@ -99,7 +112,7 @@ public class KakaoUserService {
     }
 
     // 로그인한 사용자 정보 반환받아 DB에 저장
-    public User saveUser(String token) {
+    public String SaveUserAndGetToken(String token) {
 
         // 카카오에서 access_token으로 사용자 프로필 가져오기
         KakaoProfile profile = getUserInfo(token);
@@ -126,7 +139,28 @@ public class KakaoUserService {
             userRepository.save(user);
         }
 
-        return user;
+        return createToken(user);
+    }
+
+    public String createToken(User user) {
+
+        SecretKey key = Keys.hmacShaKeyFor(JWT_SECRET.getBytes(StandardCharsets.UTF_8));
+
+        Map<String, Object> headers = new HashMap<>();
+        headers.put("typ", "JWT");
+        headers.put("alg", "HS256");
+
+        Map<String, Object> payloads = new HashMap<>();
+        payloads.put("email", user.getEmail());
+        payloads.put("pw", user.getPw());
+
+        String jwt = Jwts.builder()
+                .setHeader(headers)
+                .setClaims(payloads)
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+
+        return jwt;
     }
 
 }

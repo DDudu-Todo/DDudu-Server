@@ -9,9 +9,17 @@ import org.springframework.core.io.ClassPathResource;
 public class PropertyConfig {
 
     @Bean(name = "kakaoResource")
-    public PropertiesFactoryBean propertiesFactoryBean() {
+    public PropertiesFactoryBean kakao() {
         PropertiesFactoryBean propertiesFactoryBean = new PropertiesFactoryBean();
         ClassPathResource classPathResource = new ClassPathResource("./application-kakao.properties");
+        propertiesFactoryBean.setLocation(classPathResource);
+        return propertiesFactoryBean;
+    }
+
+    @Bean(name = "jwtResource")
+    public PropertiesFactoryBean jwt() {
+        PropertiesFactoryBean propertiesFactoryBean = new PropertiesFactoryBean();
+        ClassPathResource classPathResource = new ClassPathResource("./application-jwt.properties");
         propertiesFactoryBean.setLocation(classPathResource);
         return propertiesFactoryBean;
     }

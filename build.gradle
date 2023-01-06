@@ -33,7 +33,16 @@ dependencies {
 	// spring security
 //	implementation 'org.springframework.boot:spring-boot-starter-security'
 	// OAuth2
-//	implementation group: 'org.springframework.security.oauth', name: 'spring-security-oauth2'
+	implementation group: 'org.springframework.security.oauth', name: 'spring-security-oauth2'
+
+	// JWT
+	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
+	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-impl
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
+	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-gson
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-gson', version: '0.11.5'
+
 
 	// mysql
 	implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client'
