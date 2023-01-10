@@ -6,8 +6,7 @@ import com.ddudu.todo.model.KakaoProfile;
 import com.ddudu.todo.model.User;
 import com.ddudu.todo.model.oauth.OauthToken;
 import com.ddudu.todo.repository.UserRepository;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +41,9 @@ public class KakaoUserService {
 
     @Value("#{jwtResource['SECRET']}")
     String JWT_SECRET;
+
+    @Value("#{jwtResource['TOKEN_PREFIX']}")
+    String JWT_TOKEN_PREFIX;
 
     @Autowired
     private final UserRepository userRepository;
@@ -152,7 +154,6 @@ public class KakaoUserService {
 
         Map<String, Object> payloads = new HashMap<>();
         payloads.put("email", user.getEmail());
-        payloads.put("pw", user.getPw());
 
         String jwt = Jwts.builder()
                 .setHeader(headers)
@@ -162,5 +163,30 @@ public class KakaoUserService {
 
         return jwt;
     }
+
+    public User getUserByToken(String token) {
+
+        // 전달받은 토큰에서 필요한 정보만 가져오기
+        token = token.replace(JWT_TOKEN_PREFIX, "");
+
+        String email = null;
+
+        try {
+            // 토큰에서 이메일 정보 가져오기
+            email = Jwts.parserBuilder()
+                    .setSigningKey(Keys.hmacShaKeyFor(JWT_SECRET.getBytes(StandardCharsets.UTF_8)))
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .get("email")
+                    .toString();
+        } catch (JwtException e) {
+            e.printStackTrace();
+        }
+
+        return userRepository.findByEmail(email);
+    }
+
+
 
 }

@@ -30,3 +30,4 @@ out/
 ### properties
 application-kakao.properties
 application-jwt.properties
+application-db.properties

@@ -31,7 +31,7 @@ dependencies {
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 
 	// spring security
-//	implementation 'org.springframework.boot:spring-boot-starter-security'
+	// implementation 'org.springframework.boot:spring-boot-starter-security'
 	// OAuth2
 	implementation group: 'org.springframework.security.oauth', name: 'spring-security-oauth2'
 
