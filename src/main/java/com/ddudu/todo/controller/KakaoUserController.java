@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 
 @RequiredArgsConstructor
@@ -47,8 +48,6 @@ public class KakaoUserController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(JWT_HEADER_STRING, JWT_TOKEN_PREFIX + jwtToken);
-
-        System.out.println(headers);
 
         return ResponseEntity.ok().headers(headers).body("success");
     }
