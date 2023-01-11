@@ -1,6 +1,5 @@
 package com.ddudu.todo.service;
 
-import com.ddudu.todo.dto.UserDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ddudu.todo.model.KakaoProfile;
@@ -22,7 +21,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import javax.crypto.SecretKey;
-import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -136,8 +134,6 @@ public class KakaoUserService {
                     .init_authorization("kakao")
                     .continuous_challenges_count(0L)
                     .successed_challenges_count(0L)
-                    // 현재 시간 기록
-                    .created_at(new Timestamp(System.currentTimeMillis()))
                     .build();
 
             userRepository.save(user);
