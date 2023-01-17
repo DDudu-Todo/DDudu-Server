@@ -8,15 +8,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.lang.Nullable;
 
-import javax.persistence.Entity;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Column;
-import javax.persistence.Enumerated;
-import javax.persistence.EnumType;
+import javax.persistence.*;
 
 import java.sql.Timestamp;
 
@@ -25,16 +21,15 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @ToString
 @Getter
-@Setter
 @Builder
-public class Todo {
+public class Todo extends Base{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long user_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User owner;
 
     @Column(nullable = false)
     private boolean public_type;
@@ -55,11 +50,5 @@ public class Todo {
     @Enumerated(EnumType.STRING)
     private HashTag hash_tag;
 
-    @CreationTimestamp
-    @Column(updatable = false)
-    private Timestamp created_at;
-
-    @UpdateTimestamp
-    private Timestamp updated_at;
     private Timestamp deleted_at;
 }

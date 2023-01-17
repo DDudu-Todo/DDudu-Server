@@ -12,9 +12,8 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @ToString
 @Getter
-@Setter
 @Builder
-public class User {
+public class User extends Base {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,12 +37,5 @@ public class User {
     @Column(nullable = false)
     private Long successed_challenges_count;
     private Timestamp deleted_at;
-
-    @CreationTimestamp
-    @Column(updatable = false)
-    private Timestamp created_at;
-
-    @UpdateTimestamp
-    private Timestamp updated_at;
 
 }
