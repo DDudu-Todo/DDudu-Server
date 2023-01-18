@@ -46,4 +46,9 @@ public class Todo extends Base {
     private HashTag hash_tag;
 
     private Timestamp deleted_at;
+
+    // content 수정하는 메서드
+    public void changeContent(String contents) {
+        this.contents = contents;
+    }
 }

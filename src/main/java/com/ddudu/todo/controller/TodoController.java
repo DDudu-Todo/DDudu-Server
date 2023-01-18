@@ -3,6 +3,7 @@ package com.ddudu.todo.controller;
 import com.ddudu.todo.dto.DeleteTodoDTO;
 import com.ddudu.todo.dto.GetTodoDTO;
 import com.ddudu.todo.dto.SetTodoDTO;
+import com.ddudu.todo.dto.UpdateTodoDTO;
 import com.ddudu.todo.service.TodoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -55,6 +56,27 @@ public class TodoController {
     long removed_id = todoService.remove(task_id);
 
     if (removed_id == task_id) {
+      List<GetTodoDTO> list = todoService.getList(user_id);
+
+      return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+    else {
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @PostMapping("/modify")
+  public ResponseEntity<List<GetTodoDTO>> modify(@RequestBody UpdateTodoDTO req) {
+
+    log.info("넘어온 데이터: " + req);
+
+    long user_id = req.getUser_id();
+    long task_id = req.getTask_id();
+    String contents = req.getContents();
+
+    long modified_id = todoService.modify(task_id, contents);
+
+    if (modified_id == task_id) {
       List<GetTodoDTO> list = todoService.getList(user_id);
 
       return new ResponseEntity<>(list, HttpStatus.OK);

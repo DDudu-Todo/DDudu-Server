@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -54,5 +55,23 @@ public class TodoServiceImpl implements TodoService{
     todoRepository.deleteById(task_id);
 
     return task_id;
+  }
+
+  @Override
+  public Long modify(Long task_id, String task) {
+
+    Optional<Todo> todo = todoRepository.findById(task_id);
+
+    if (todo.isPresent()) {
+      log.info("before edit: " + todo.get());
+      todo.get().changeContent(task);
+      log.info("after edit: " + todo.get());
+
+      todoRepository.save(todo.get());
+
+      return todo.get().getId();
+    }
+
+    return null;
   }
 }

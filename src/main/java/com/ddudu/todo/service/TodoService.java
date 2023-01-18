@@ -15,6 +15,8 @@ public interface TodoService {
 
   public Long remove(Long task_id);
 
+  public Long modify(Long task_id, String task);
+
   default public Todo getDtoToEntity(GetTodoDTO dto) {
     return Todo.builder()
             .id(dto.getId())
