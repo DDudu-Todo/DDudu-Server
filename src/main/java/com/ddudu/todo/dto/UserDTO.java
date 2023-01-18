@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class UserDTO {
+    private Long id;
     private String email;
     private String nick_name;
     private String image_url;
