@@ -23,6 +23,9 @@ import org.springframework.web.client.RestTemplate;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -153,13 +156,17 @@ public class KakaoUserService {
         Map<String, Object> payloads = new HashMap<>();
         payloads.put("email", user.getEmail());
 
-        String jwt = Jwts.builder()
+        Date expireDate = Date.from(
+                Instant.now()
+                        .plus(1, ChronoUnit.DAYS)
+        );
+
+        return Jwts.builder()
                 .setHeader(headers)
                 .setClaims(payloads)
+                .setExpiration(expireDate)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
-
-        return jwt;
     }
 
     public User getUserByToken(String token) {
