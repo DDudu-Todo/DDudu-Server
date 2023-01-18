@@ -5,31 +5,26 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.Getter;
-import lombok.Setter;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.lang.Nullable;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
 import java.sql.Timestamp;
 
 @Entity
+@Table(name = "todo")
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @Getter
 @Builder
-public class Todo extends Base{
+public class Todo extends Base {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User owner;
+    private Long user_id;
 
     @Column(nullable = false)
     private boolean public_type;
@@ -46,7 +41,7 @@ public class Todo extends Base{
     @Column(nullable = false)
     private String contents;
 
-    @Column(columnDefinition = "ENUM('운동','취미','공부','나들이','여행','자기개발')")
+    @Column(columnDefinition = "ENUM('운동','취미','공부','나들이','여행','자기개발','기타')")
     @Enumerated(EnumType.STRING)
     private HashTag hash_tag;
 
