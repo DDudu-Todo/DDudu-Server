@@ -56,6 +56,7 @@ public class KakaoUserController {
 
         // 아래 정보들을 응답 객체에 담아 보낸다.
         UserDTO dto = UserDTO.builder()
+                .id(user.getId())
                 .email(user.getEmail())
                 .nick_name(user.getNick_name())
                 .image_url(user.getImage_url())
