@@ -1,5 +1,23 @@
 package com.ddudu.todo.model;
 
-public enum HashTag {
-    운동, 취미, 공부, 나들이, 여행, 자기개발, 기타
+import lombok.*;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "hashtag")
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@Getter
+@Builder
+public class Hashtag extends Base {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long hashtag_id;
+
+  @Column(nullable = false, unique = true)
+  private String contents;
+
 }

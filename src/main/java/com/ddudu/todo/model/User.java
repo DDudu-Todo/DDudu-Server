@@ -1,8 +1,6 @@
 package com.ddudu.todo.model;
 
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -16,8 +14,8 @@ import java.sql.Timestamp;
 public class User extends Base {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long user_id;
 
     private String email;
 
@@ -31,11 +29,6 @@ public class User extends Base {
     private String init_authorization;
     private String image_url;
 
-    @Column(nullable = false)
-    private Long continuous_challenges_count;
-
-    @Column(nullable = false)
-    private Long successed_challenges_count;
     private Timestamp deleted_at;
 
 }
