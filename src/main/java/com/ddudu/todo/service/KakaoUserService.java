@@ -22,7 +22,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -135,8 +134,6 @@ public class KakaoUserService {
                     .email(profile.getKakao_account().getEmail())
                     // 카카오 로그인 사용자라고 명시
                     .init_authorization("kakao")
-                    .continuous_challenges_count(0L)
-                    .successed_challenges_count(0L)
                     .build();
 
             userRepository.save(user);

@@ -13,4 +13,6 @@ public class SetTodoDTO {
 
   private Long user_id;
   private String contents;
+  private boolean public_type;
+  private String hashtag;
 }

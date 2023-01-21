@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class UpdateTodoDTO {
 
   private Long user_id;
-  private Long task_id;
+  private Long todo_id;
   private String contents;
 }

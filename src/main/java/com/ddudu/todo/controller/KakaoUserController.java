@@ -56,12 +56,10 @@ public class KakaoUserController {
 
         // 아래 정보들을 응답 객체에 담아 보낸다.
         UserDTO dto = UserDTO.builder()
-                .id(user.getId())
+                .user_id(user.getUser_id())
                 .email(user.getEmail())
                 .nick_name(user.getNick_name())
                 .image_url(user.getImage_url())
-                .continuous_challenges_count(user.getContinuous_challenges_count())
-                .successed_challenges_count(user.getSuccessed_challenges_count())
                 .build();
 
         return ResponseEntity.ok().body(dto);

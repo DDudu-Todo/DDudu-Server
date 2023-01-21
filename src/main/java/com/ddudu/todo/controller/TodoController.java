@@ -25,38 +25,32 @@ public class TodoController {
   public ResponseEntity<List<GetTodoDTO>> getList(@PathVariable("user_id") Long user_id) {
 
     List<GetTodoDTO> list = todoService.getList(user_id);
-    System.out.println(list);
+    log.info("조회된 데이터 목록: " + list);
 
     return new ResponseEntity<>(list, HttpStatus.OK);
   }
-
   @PostMapping("/add")
   public ResponseEntity<List<GetTodoDTO>> add(@RequestBody SetTodoDTO req) {
 
     log.info("넘어온 데이터: " + req);
 
-    Long user_id = req.getUser_id();
-    String contents = req.getContents();
-
-    todoService.add(user_id, contents);
+    Long user_id = todoService.add(req);
 
     List<GetTodoDTO> list = todoService.getList(user_id);
 
     return new ResponseEntity<>(list, HttpStatus.OK);
   }
 
+
   @DeleteMapping("/remove")
   public ResponseEntity<List<GetTodoDTO>> remove(@RequestBody DeleteTodoDTO req) {
 
     log.info("넘어온 데이터: " + req);
 
-    long task_id = req.getTask_id();
-    long user_id = req.getUser_id();
+    long removed_id = todoService.remove(req);
 
-    long removed_id = todoService.remove(task_id);
-
-    if (removed_id == task_id) {
-      List<GetTodoDTO> list = todoService.getList(user_id);
+    if (removed_id == req.getTodo_id()) {
+      List<GetTodoDTO> list = todoService.getList(req.getUser_id());
 
       return new ResponseEntity<>(list, HttpStatus.OK);
     }
@@ -70,14 +64,10 @@ public class TodoController {
 
     log.info("넘어온 데이터: " + req);
 
-    long user_id = req.getUser_id();
-    long task_id = req.getTask_id();
-    String contents = req.getContents();
+    long modified_id = todoService.modify(req);
 
-    long modified_id = todoService.modify(task_id, contents);
-
-    if (modified_id == task_id) {
-      List<GetTodoDTO> list = todoService.getList(user_id);
+    if (modified_id == req.getTodo_id()) {
+      List<GetTodoDTO> list = todoService.getList(req.getUser_id());
 
       return new ResponseEntity<>(list, HttpStatus.OK);
     }

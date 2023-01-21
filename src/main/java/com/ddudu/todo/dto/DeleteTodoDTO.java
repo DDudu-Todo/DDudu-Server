@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class DeleteTodoDTO {
 
-  private Long task_id;
+  private Long todo_id;
   private Long user_id;
 }
