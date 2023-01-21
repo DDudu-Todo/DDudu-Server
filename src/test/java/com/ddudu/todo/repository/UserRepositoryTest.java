@@ -23,8 +23,6 @@ public class UserRepositoryTest {
               .nick_name("user"+i)
               .init_authorization("local")
               .image_url("default.png")
-              .continuous_challenges_count(0L)
-              .successed_challenges_count(0L)
               .build();
 
       userRepository.save(user);

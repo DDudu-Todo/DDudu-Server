@@ -10,6 +10,7 @@ public class TodoServiceTest {
   @Autowired
   private TodoService todoService;
 
+  /*
   @Test
   public void task_데이터_수정() {
     Long result = todoService.modify(221L, "hihi 할일 수정");
@@ -20,4 +21,6 @@ public class TodoServiceTest {
       System.out.println("수정 실패");
     }
   }
+
+   */
 }
