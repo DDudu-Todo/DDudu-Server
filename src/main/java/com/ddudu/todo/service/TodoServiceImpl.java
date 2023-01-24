@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,12 +29,11 @@ public class TodoServiceImpl implements TodoService{
   @Override
   public List<GetTodoDTO> getList(Long user_id) {
     List<Todo> list = todoRepository.getList(user_id);
-
-    // TODO: 삭제된 데이터 필터링
     // TODO: done(끝난 task) 확인 작업
 
-    List<GetTodoDTO> result = list.stream().map(todo -> {
-
+    List<GetTodoDTO> result = list.stream()
+            .filter(todo -> todo.getDeleted_at() == null)
+            .map(todo -> {
       GetTodoDTO dto = entityToGetDto(todo);
       Optional<Hashtag> hashtag = hashtagRepository.findById(todo.getHashtag_id());
 
@@ -65,26 +65,50 @@ public class TodoServiceImpl implements TodoService{
       hashtag_id = hashtagRepository.findByContents(dto.getHashtag());
     }
 
-    Todo todo = Todo.builder()
-            .user_id(dto.getUser_id())
-            .public_type(dto.isPublic_type())
-            .done(false)
-            .contents(dto.getContents())
-            .hashtag_id(hashtag_id)
-            .build();
+    Optional<Todo> same_todo = todoRepository.findByUserIdAndContentsAndHashtagId(dto.getUser_id(), dto.getContents(), hashtag_id);
 
-    todoRepository.save(todo);
-    return todo.getUser_id();
+    if (same_todo.isEmpty()) {
+      Todo todo = Todo.builder()
+              .user_id(dto.getUser_id())
+              .public_type(dto.isPublic_type())
+              .done(false)
+              .contents(dto.getContents())
+              .hashtag_id(hashtag_id)
+              .deleted_at(null)
+              .build();
+
+      todoRepository.save(todo);
+      return todo.getUser_id();
+    }
+    else {
+      if (same_todo.get().getDeleted_at() == null) {
+        return null;
+      }
+      else {
+        same_todo.get().setDeleted_at(null);
+        todoRepository.save(same_todo.get());
+        return same_todo.get().getUser_id();
+      }
+    }
+
   }
 
   @Override
   public Long remove(DeleteTodoDTO dto) {
 
-    // TODO: 삭제된 시간 기록
+    Optional<Todo> todo = todoRepository.findById(dto.getTodo_id());
 
-    todoRepository.deleteById(dto.getTodo_id());
+    if (todo.isPresent()) {
+      todo.get().setDeleted_at(new Timestamp(System.currentTimeMillis()));
+      log.info("after set deleted time: " + todo.get());
 
-    return dto.getTodo_id();
+      todoRepository.save(todo.get());
+
+      return dto.getTodo_id();
+    }
+
+    return null;
+
   }
 
   @Override

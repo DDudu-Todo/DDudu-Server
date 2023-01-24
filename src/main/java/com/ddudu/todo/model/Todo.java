@@ -42,4 +42,9 @@ public class Todo extends Base {
     public void changeContent(String contents) {
         this.contents = contents;
     }
+
+    // 삭제 시간 기록하는 메서드
+    public void setDeleted_at(Timestamp deleted_at) {
+        this.deleted_at = deleted_at;
+    }
 }

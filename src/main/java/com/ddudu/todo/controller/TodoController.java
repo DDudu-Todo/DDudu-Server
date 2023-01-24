@@ -35,9 +35,11 @@ public class TodoController {
     log.info("넘어온 데이터: " + req);
 
     Long user_id = todoService.add(req);
+    if (user_id == null) {
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
     List<GetTodoDTO> list = todoService.getList(user_id);
-
     return new ResponseEntity<>(list, HttpStatus.OK);
   }
 
