@@ -7,6 +7,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.Arrays;
+
 @Configuration
 public class CorsConfig {
 
@@ -20,8 +22,10 @@ public class CorsConfig {
 
         config.setAllowCredentials(true);
         config.addAllowedOriginPattern("http://localhost:3000");
-        config.addExposedHeader(JWT_HEADER_STRING);
-        source.registerCorsConfiguration("/api/**", config);
+        config.setAllowedMethods(Arrays.asList("GET","POST","DELETE","UPDATE","OPTIONS"));
+        config.setAllowedHeaders(Arrays.asList("Origin", "Accept", "X-Requested-With", "Content-Type", "Access-Control-Request-Method", "Access-Control-Request-Headers", JWT_HEADER_STRING));
+        config.addExposedHeader("*");
+        source.registerCorsConfiguration("/**", config);
 
         return new CorsFilter(source);
     }

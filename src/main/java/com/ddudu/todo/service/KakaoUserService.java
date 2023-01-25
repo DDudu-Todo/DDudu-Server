@@ -1,6 +1,5 @@
 package com.ddudu.todo.service;
 
-import com.ddudu.todo.dto.UserDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ddudu.todo.model.KakaoProfile;
@@ -22,9 +21,10 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import javax.crypto.SecretKey;
-import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -134,10 +134,6 @@ public class KakaoUserService {
                     .email(profile.getKakao_account().getEmail())
                     // 카카오 로그인 사용자라고 명시
                     .init_authorization("kakao")
-                    .continuous_challenges_count(0L)
-                    .successed_challenges_count(0L)
-                    // 현재 시간 기록
-                    .created_at(new Timestamp(System.currentTimeMillis()))
                     .build();
 
             userRepository.save(user);
@@ -157,13 +153,17 @@ public class KakaoUserService {
         Map<String, Object> payloads = new HashMap<>();
         payloads.put("email", user.getEmail());
 
-        String jwt = Jwts.builder()
+        Date expireDate = Date.from(
+                Instant.now()
+                        .plus(1, ChronoUnit.DAYS)
+        );
+
+        return Jwts.builder()
                 .setHeader(headers)
                 .setClaims(payloads)
+                .setExpiration(expireDate)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
-
-        return jwt;
     }
 
     public User getUserByToken(String token) {
