@@ -1,6 +1,6 @@
 package com.ddudu.todo.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,10 +14,10 @@ import org.springframework.web.filter.CorsFilter;
 
 // web 보안 활성화
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Autowired
-    CorsFilter corsFilter;
+	private final CorsFilter corsFilter;
 
 	@Bean
 	// 정적 파일 제외하고 spring security 실행

@@ -20,6 +20,8 @@ public interface TodoService {
 
   public Long modify(UpdateTodoDTO dto);
 
+  public Long changeChecked(DeleteTodoDTO dto);
+
   default public GetTodoDTO entityToGetDto(Todo entity) {
 
     return GetTodoDTO.builder()

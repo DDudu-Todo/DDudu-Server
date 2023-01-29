@@ -47,4 +47,9 @@ public class Todo extends Base {
     public void setDeleted_at(Timestamp deleted_at) {
         this.deleted_at = deleted_at;
     }
+
+    // done 수정하는 메서드
+    public void checkTodo() {
+        done = !this.done;
+    }
 }

@@ -78,4 +78,18 @@ public class TodoController {
     }
   }
 
+  @PostMapping("/change-status")
+  public ResponseEntity<Long> changeStatus(@RequestBody DeleteTodoDTO req) {
+    log.info("넘어온 데이터(done): " + req);
+
+    long done_id = todoService.changeChecked(req);
+
+    if (done_id == req.getTodo_id()) {
+      return new ResponseEntity<>(done_id, HttpStatus.OK);
+    }
+    else {
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
 }

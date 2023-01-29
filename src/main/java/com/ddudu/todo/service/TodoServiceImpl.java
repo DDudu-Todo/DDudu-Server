@@ -128,4 +128,22 @@ public class TodoServiceImpl implements TodoService{
 
     return null;
   }
+
+  @Override
+  public Long changeChecked(DeleteTodoDTO dto) {
+
+    Optional<Todo> todo = todoRepository.findById(dto.getTodo_id());
+
+    if (todo.isPresent()) {
+      log.info("before change done status: " + todo.get());
+      todo.get().checkTodo();
+      log.info("after change done status: " + todo.get());
+
+      todoRepository.save(todo.get());
+
+      return todo.get().getTodo_id();
+    }
+
+    return null;
+  }
 }
