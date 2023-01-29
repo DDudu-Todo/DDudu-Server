@@ -27,8 +27,13 @@ public class TodoServiceImpl implements TodoService{
   private final HashtagRepository hashtagRepository;
 
   @Override
-  public List<GetTodoDTO> getList(Long user_id) {
-    List<Todo> list = todoRepository.getList(user_id);
+  public List<GetTodoDTO> getList(Long user_id, String date) {
+
+    String date_ = date.replace(" ", "");
+
+    List<Todo> list = todoRepository.getListByUserIdAndDate(user_id, date_);
+
+//    List<Todo> list = todoRepository.getList(user_id);
     // TODO: done(끝난 task) 확인 작업
 
     List<GetTodoDTO> result = list.stream()
@@ -71,10 +76,11 @@ public class TodoServiceImpl implements TodoService{
       Todo todo = Todo.builder()
               .user_id(dto.getUser_id())
               .public_type(dto.isPublic_type())
-              .done(false)
+              .undone(true)
               .contents(dto.getContents())
               .hashtag_id(hashtag_id)
               .deleted_at(null)
+              .date(dto.getDate().replace(" ", ""))
               .build();
 
       todoRepository.save(todo);
@@ -135,9 +141,9 @@ public class TodoServiceImpl implements TodoService{
     Optional<Todo> todo = todoRepository.findById(dto.getTodo_id());
 
     if (todo.isPresent()) {
-      log.info("before change done status: " + todo.get());
+      log.info("before change task status: " + todo.get());
       todo.get().checkTodo();
-      log.info("after change done status: " + todo.get());
+      log.info("after change task status: " + todo.get());
 
       todoRepository.save(todo.get());
 

@@ -29,7 +29,7 @@ public class Todo extends Base {
     private boolean public_type;
 
     @Column(nullable = false)
-    private boolean done;
+    private boolean undone;
 
     @Column(nullable = false)
     private String contents;
@@ -37,6 +37,8 @@ public class Todo extends Base {
     private Long hashtag_id;
 
     private Timestamp deleted_at;
+
+    private String date;
 
     // content 수정하는 메서드
     public void changeContent(String contents) {
@@ -50,6 +52,6 @@ public class Todo extends Base {
 
     // done 수정하는 메서드
     public void checkTodo() {
-        done = !this.done;
+        undone = !this.undone;
     }
 }

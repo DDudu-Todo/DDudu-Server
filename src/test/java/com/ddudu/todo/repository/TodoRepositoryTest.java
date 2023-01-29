@@ -38,7 +38,7 @@ public class TodoRepositoryTest {
         Todo todo = Todo.builder()
                 .user_id(2L)
                 .public_type(false)
-                .done(false)
+                .undone(false)
                 .contents("나들이!!!")
                 .hashtag_id(1L)
                 .build();
@@ -56,7 +56,7 @@ public class TodoRepositoryTest {
             Todo todo = Todo.builder()
                     .user_id(user_id)
                     .public_type(false)
-                    .done(false)
+                    .undone(false)
                     .contents("할일 "+i)
                     .build();
 
@@ -72,7 +72,7 @@ public class TodoRepositoryTest {
                 .todo_id(15L)
                 .user_id(17L)
                 .public_type(false)
-                .done(false)
+                .undone(false)
                 .contents("할일1_수정본")
                 .build();
 

@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public interface TodoService {
 
-  public List<GetTodoDTO> getList(Long user_id);
+  public List<GetTodoDTO> getList(Long user_id, String date);
 
   public Long add(SetTodoDTO dto);
 
@@ -27,7 +27,7 @@ public interface TodoService {
     return GetTodoDTO.builder()
             .id(entity.getTodo_id())
             .public_type(entity.isPublic_type())
-            .done(entity.isDone())
+            .undone(entity.isUndone())
             .contents(entity.getContents())
             .created_at(entity.getCreated_at())
             .updated_at(entity.getUpdated_at())

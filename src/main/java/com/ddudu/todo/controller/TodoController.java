@@ -21,14 +21,16 @@ public class TodoController {
 
   private final TodoService todoService;
 
-  @GetMapping("/{user_id}")
-  public ResponseEntity<List<GetTodoDTO>> getList(@PathVariable("user_id") Long user_id) {
+  @GetMapping("/{date}/{user_id}")
+  public ResponseEntity<List<GetTodoDTO>> getList(@PathVariable("date") String date,
+                                                  @PathVariable("user_id") Long user_id) {
 
-    List<GetTodoDTO> list = todoService.getList(user_id);
+    List<GetTodoDTO> list = todoService.getList(user_id, date);
     log.info("조회된 데이터 목록: " + list);
 
     return new ResponseEntity<>(list, HttpStatus.OK);
   }
+
   @PostMapping("/add")
   public ResponseEntity<List<GetTodoDTO>> add(@RequestBody SetTodoDTO req) {
 
@@ -39,7 +41,7 @@ public class TodoController {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    List<GetTodoDTO> list = todoService.getList(user_id);
+    List<GetTodoDTO> list = todoService.getList(user_id, req.getDate());
     return new ResponseEntity<>(list, HttpStatus.OK);
   }
 
@@ -52,7 +54,7 @@ public class TodoController {
     long removed_id = todoService.remove(req);
 
     if (removed_id == req.getTodo_id()) {
-      List<GetTodoDTO> list = todoService.getList(req.getUser_id());
+      List<GetTodoDTO> list = todoService.getList(req.getUser_id(), req.getDate());
 
       return new ResponseEntity<>(list, HttpStatus.OK);
     }
@@ -69,7 +71,7 @@ public class TodoController {
     long modified_id = todoService.modify(req);
 
     if (modified_id == req.getTodo_id()) {
-      List<GetTodoDTO> list = todoService.getList(req.getUser_id());
+      List<GetTodoDTO> list = todoService.getList(req.getUser_id(), req.getDate());
 
       return new ResponseEntity<>(list, HttpStatus.OK);
     }

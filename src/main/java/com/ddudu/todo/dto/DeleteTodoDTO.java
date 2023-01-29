@@ -13,4 +13,6 @@ public class DeleteTodoDTO {
 
   private Long todo_id;
   private Long user_id;
+
+  private String date;
 }

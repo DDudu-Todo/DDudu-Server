@@ -15,10 +15,12 @@ public class GetTodoDTO {
 
   private Long id;
   private boolean public_type;
-  private boolean done;
+  private boolean undone;
   private String contents;
   private String hashtag;
   private Timestamp created_at;
   private Timestamp updated_at;
   private Timestamp deleted_at;
+
+  private String date;
 }
