@@ -15,4 +15,6 @@ public class SetTodoDTO {
   private String contents;
   private boolean public_type;
   private String hashtag;
+
+  private String date;
 }

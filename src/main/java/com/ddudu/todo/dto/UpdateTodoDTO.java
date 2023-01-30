@@ -14,4 +14,6 @@ public class UpdateTodoDTO {
   private Long user_id;
   private Long todo_id;
   private String contents;
+
+  private String date;
 }
