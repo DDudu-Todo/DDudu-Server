@@ -9,6 +9,7 @@ import com.ddudu.todo.repository.UserRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -27,7 +28,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
+@Log4j2
 @RequiredArgsConstructor
 @Service
 public class KakaoUserService {
@@ -112,6 +115,7 @@ public class KakaoUserService {
             e.printStackTrace();
         }
 
+        System.out.println("kakaoProfile: " + kakaoProfile);
         return kakaoProfile;
     }
 
@@ -122,24 +126,31 @@ public class KakaoUserService {
         KakaoProfile profile = getUserInfo(token);
 
         // 사용자 email로 user 존재하는지 확인
-        User user = userRepository.findByEmail(profile.getKakao_account().getEmail());
+        Optional<User> user = userRepository.findByEmail(profile.getKakao_account().getEmail());
 
+        User new_user = null;
         // 현재 로그인한 사용자 데이터가 DB에 없다면
-        if(user == null) {
+        if(user.isEmpty()) {
 
-            user = User.builder()
+            new_user = User.builder()
                     .kakao_id(profile.getId().toString())
                     .image_url(profile.getKakao_account().getProfile().getProfile_image_url())
-                    .nick_name(profile.getKakao_account().getProfile().getNickname())
+                    .nickname(profile.getKakao_account().getProfile().getNickname())
                     .email(profile.getKakao_account().getEmail())
                     // 카카오 로그인 사용자라고 명시
                     .init_authorization("kakao")
                     .build();
 
-            userRepository.save(user);
+            userRepository.save(new_user);
+            return createToken(new_user);
+        }
+        else {
+            new_user = user.get();
+
+            userRepository.save(new_user);
+            return createToken(new_user);
         }
 
-        return createToken(user);
     }
 
     public String createToken(User user) {
@@ -186,9 +197,14 @@ public class KakaoUserService {
             e.printStackTrace();
         }
 
-        return userRepository.findByEmail(email);
+        Optional<User> find_user = userRepository.findByEmail(email);
+
+        if (find_user.isPresent()) {
+            return find_user.get();
+        } else {
+            return null;
+        }
+
     }
-
-
 
 }

@@ -8,6 +8,6 @@ import lombok.Data;
 public class UserDTO {
     private Long user_id;
     private String email;
-    private String nick_name;
+    private String nickname;
     private String image_url;
 }
