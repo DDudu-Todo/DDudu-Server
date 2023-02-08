@@ -20,7 +20,7 @@ public class UserRepositoryTest {
       User user = User.builder()
               .email("user"+i+"@kakao.com")
               .pw("1234")
-              .nick_name("user"+i)
+              .nickname("user"+i)
               .init_authorization("local")
               .image_url("default.png")
               .build();

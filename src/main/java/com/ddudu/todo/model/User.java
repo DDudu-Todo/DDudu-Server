@@ -1,9 +1,14 @@
 package com.ddudu.todo.model;
 
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Entity
 @AllArgsConstructor
@@ -23,7 +28,7 @@ public class User extends Base {
 
     private String kakao_id;
 
-    private String nick_name;
+    private String nickname;
 
     @Column(nullable = false)
     private String init_authorization;

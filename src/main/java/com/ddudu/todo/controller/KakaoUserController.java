@@ -58,7 +58,7 @@ public class KakaoUserController {
         UserDTO dto = UserDTO.builder()
                 .user_id(user.getUser_id())
                 .email(user.getEmail())
-                .nick_name(user.getNick_name())
+                .nickname(user.getNickname())
                 .image_url(user.getImage_url())
                 .build();
 
