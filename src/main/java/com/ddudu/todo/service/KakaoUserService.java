@@ -1,5 +1,6 @@
 package com.ddudu.todo.service;
 
+import com.ddudu.todo.model.oauth.AccessTokenValid;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ddudu.todo.model.KakaoProfile;
@@ -10,12 +11,12 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.server.header.CrossOriginEmbedderPolicyServerHttpHeadersWriter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -50,7 +51,6 @@ public class KakaoUserService {
     @Value("#{jwtResource['TOKEN_PREFIX']}")
     String JWT_TOKEN_PREFIX;
 
-    @Autowired
     private final UserRepository userRepository;
 
     // access_token 발급받기 위한 카카오로 request 보내는 일련의 작업
@@ -120,7 +120,7 @@ public class KakaoUserService {
     }
 
     // 로그인한 사용자 정보 반환받아 DB에 저장
-    public String SaveUserAndGetToken(String token) {
+    public Long SaveUserAndGetToken(String token) {
 
         // 카카오에서 access_token으로 사용자 프로필 가져오기
         KakaoProfile profile = getUserInfo(token);
@@ -128,12 +128,10 @@ public class KakaoUserService {
         // 사용자 email로 user 존재하는지 확인
         Optional<User> user = userRepository.findByEmail(profile.getKakao_account().getEmail());
 
-        User new_user = null;
         // 현재 로그인한 사용자 데이터가 DB에 없다면
         if(user.isEmpty()) {
-
-            new_user = User.builder()
-                    .kakao_id(profile.getId().toString())
+            User new_user = User.builder()
+                    .kakao_id(profile.getId())
                     .image_url(profile.getKakao_account().getProfile().getProfile_image_url())
                     .nickname(profile.getKakao_account().getProfile().getNickname())
                     .email(profile.getKakao_account().getEmail())
@@ -141,16 +139,14 @@ public class KakaoUserService {
                     .init_authorization("kakao")
                     .build();
 
-            userRepository.save(new_user);
-            return createToken(new_user);
-        }
-        else {
-            new_user = user.get();
+            System.out.println("user: " + new_user.toString());
 
             userRepository.save(new_user);
-            return createToken(new_user);
+
+            return new_user.getUser_id();
         }
 
+        return user.get().getUser_id();
     }
 
     public String createToken(User user) {
@@ -177,34 +173,69 @@ public class KakaoUserService {
                 .compact();
     }
 
-    public User getUserByToken(String token) {
+    public AccessTokenValid isAccessTokenValid(String token) {
 
         // 전달받은 토큰에서 필요한 정보만 가져오기
         token = token.replace(JWT_TOKEN_PREFIX, "");
+        // System.out.println("token: " + token); (확인 완료)
 
-        String email = null;
+        RestTemplate restTemplate = new RestTemplate();
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", JWT_TOKEN_PREFIX + token);
+
+        HttpEntity<MultiValueMap<String, Object>> tokenValidRequest = new HttpEntity<>(headers);
+        ResponseEntity<String> isTokenValid = restTemplate.exchange(
+                "https://kapi.kakao.com/v1/user/access_token_info",
+                HttpMethod.GET,
+                tokenValidRequest,
+                String.class
+        );
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        AccessTokenValid accessTokenValid = null;
         try {
-            // 토큰에서 이메일 정보 가져오기
-            email = Jwts.parserBuilder()
-                    .setSigningKey(Keys.hmacShaKeyFor(JWT_SECRET.getBytes(StandardCharsets.UTF_8)))
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody()
-                    .get("email")
-                    .toString();
-        } catch (JwtException e) {
+            accessTokenValid = objectMapper.readValue(isTokenValid.getBody(), AccessTokenValid.class);
+
+            if (accessTokenValid != null) {
+                return accessTokenValid;
+            } else {
+                return null;
+            }
+
+        } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
 
-        Optional<User> find_user = userRepository.findByEmail(email);
+        return null;
+    }
 
-        if (find_user.isPresent()) {
-            return find_user.get();
-        } else {
+    public User getUserByToken(String token) {
+
+
+        AccessTokenValid validToken = isAccessTokenValid(token);
+
+        if (validToken == null) {
             return null;
         }
 
+        Optional<User> user = userRepository.findByKakao_id(validToken.getId());
+
+        return user.orElse(null);
+
+//        try {
+//
+//            // 토큰에서 이메일 정보 가져오기
+//            email = Jwts.parserBuilder()
+//                    .setSigningKey(Keys.hmacShaKeyFor(JWT_SECRET.getBytes(StandardCharsets.UTF_8)))
+//                    .build()
+//                    .parseClaimsJws(token)
+//                    .getBody()
+//                    .get("email")
+//                    .toString();
+//        } catch (JwtException e) {
+//            e.printStackTrace();
+//        }
     }
 
 }

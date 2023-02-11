@@ -33,7 +33,6 @@ public class TodoServiceImpl implements TodoService{
 
     List<Todo> list = todoRepository.getListByUserIdAndDate(user_id, date_);
 
-//    List<Todo> list = todoRepository.getList(user_id);
     // TODO: done(끝난 task) 확인 작업
 
     List<GetTodoDTO> result = list.stream()

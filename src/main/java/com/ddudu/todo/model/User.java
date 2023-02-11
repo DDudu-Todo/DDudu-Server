@@ -26,7 +26,7 @@ public class User extends Base {
 
     private String pw;
 
-    private String kakao_id;
+    private Long kakao_id;
 
     private String nickname;
 
